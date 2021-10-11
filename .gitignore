@@ -1,3 +1,9 @@
+#Ignore Docs
+Docs/
+
+#Ignore temp archive dataset
+Code/Data/archive/
+
 # History files
 .Rhistory
 .Rapp.history
