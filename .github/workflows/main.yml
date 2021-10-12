@@ -7,12 +7,13 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
+  on: workflow_dispatch
   #schedule:
   #  - cron: '30 10,18 * * *'    
 
 jobs:
   hadleyfreebot-post:
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     env:
       TWITTER_CONSUMER_API_KEY_HADLEYBOT: ${{ secrets.TWITTER_CONSUMER_API_KEY_HADLEYBOT }}
       TWITTER_CONSUMER_API_SECRET_HADLEYBOT: ${{ secrets.TWITTER_CONSUMER_API_SECRET_HADLEYBOT }}
