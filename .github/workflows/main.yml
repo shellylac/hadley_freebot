@@ -19,15 +19,8 @@ jobs:
       TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT }}
     steps:
       - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@master
-
-  #Install R packages
-      - name: Install packages
-        run: |
-          R -e 'install.packages("here", dependencies = TRUE)'
-          R -e 'install.packages("readr", dependencies = TRUE)'
-          R -e 'install.packages("glue", dependencies = TRUE)'
-          R -e 'install.packages("rtweet", dependencies = TRUE)'
+      - uses: r-lib/actions/setup-r@V1
+      - uses: r-lib/actions/setup-renv@v1
   
   #Run R script
       - name: Create and post tweet
@@ -41,6 +34,6 @@ jobs:
           git add Code/Data/*
           git commit -am "GA updates rows tweeted dataset"
           git push origin main
-        env: |
-          REPO_KEY: ${{secrets.GITHUB_TOKEN}}
+        env:
+          REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
           username: github-actions
