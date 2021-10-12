@@ -42,13 +42,22 @@ tweet_sentence <- function(dataset) {
 #Generate sentence to tweet
 tweet <- tweet_sentence(hadley_data)
 
-#Connect to Twitter
+#Connect to Twitter (use case interactive within R)
+# rtweet::create_token(
+#   app = "Hadley Freebot",  # the name of the Twitter app
+#   consumer_key = keyring::key_get("TWITTER_CONSUMER_API_KEY_hadleybot"),
+#   consumer_secret = keyring::key_get("TWITTER_CONSUMER_API_SECRET_hadleybot"),
+#   access_token = keyring::key_get("TWITTER_ACCESS_TOKEN_hadleybot"),
+#   access_secret = keyring::key_get("TWITTER_ACCESS_TOKEN_SECRET_hadleybot")
+#)
+
+#Connect to Twitter (use case for Github Actions)
 rtweet::create_token(
   app = "Hadley Freebot",  # the name of the Twitter app
-  consumer_key = keyring::key_get("TWITTER_CONSUMER_API_KEY_hadleybot"),
-  consumer_secret = keyring::key_get("TWITTER_CONSUMER_API_SECRET_hadleybot"),
-  access_token = keyring::key_get("TWITTER_ACCESS_TOKEN_hadleybot"),
-  access_secret = keyring::key_get("TWITTER_ACCESS_TOKEN_SECRET_hadleybot")
+  consumer_key = Sys.getenv("TWITTER_CONSUMER_API_KEY_HADLEYBOT"),
+  consumer_secret = Sys.getenv("TWITTER_CONSUMER_API_SECRET_HADLEYBOT"),
+  access_token = Sys.getenv("TWITTER_ACCESS_TOKEN_HADLEYBOT"),
+  access_secret = Sys.getenv("TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT")
 )
 
 # tweet it
