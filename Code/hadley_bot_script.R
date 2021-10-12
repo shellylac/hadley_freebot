@@ -1,4 +1,8 @@
 #Script to run twitter bot for HF titles
+#set snapshot of packages for renv
+#renv::init()
+#Run this if packages get updated, installed, removed etc
+#renv::snapshot()
 
 #load libraries
 library(here)
