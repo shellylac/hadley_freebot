@@ -2,7 +2,7 @@
 
 #load libraries
 library(here)
-library(tidyverse)
+library(readr)
 library(glue)
 library(rtweet)
 
@@ -12,9 +12,6 @@ hadley_data <- read_csv(here("Data", "hadley_dataset.csv"))
 rows_tweeted <- read_csv(here("Data", "rows_tweeted.csv"))
 
 #....................................
-#Function to compose the tweet
-#.....................................
-
 #Function to randomly select row to tweet
 row_select <- function(dataset){
   row_id <- sample(1:dim(dataset)[1], 1)
@@ -29,6 +26,7 @@ row_select <- function(dataset){
   return(row_id)
 }
 
+#....................................
 #Function to form twitter message
 tweet_sentence <- function(dataset) {
   row_id <- row_select(dataset)
@@ -39,9 +37,11 @@ tweet_sentence <- function(dataset) {
   return(tweet)
 }
 
+#....................................
 #Generate sentence to tweet
 tweet <- tweet_sentence(hadley_data)
 
+#....................................
 #Connect to Twitter (use case interactive within R)
 # rtweet::create_token(
 #   app = "Hadley Freebot",  # the name of the Twitter app
@@ -51,6 +51,7 @@ tweet <- tweet_sentence(hadley_data)
 #   access_secret = keyring::key_get("TWITTER_ACCESS_TOKEN_SECRET_hadleybot")
 #)
 
+#....................................
 #Connect to Twitter (use case for Github Actions)
 rtweet::create_token(
   app = "Hadley Freebot",  # the name of the Twitter app
@@ -60,6 +61,7 @@ rtweet::create_token(
   access_secret = Sys.getenv("TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT")
 )
 
+#....................................
 # tweet it
 post_tweet(status = glue("{tweet}"))
 
