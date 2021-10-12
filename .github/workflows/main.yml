@@ -5,9 +5,7 @@ name: tweet_scheduler
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  push:
-    branches: [ main ]
-  on: workflow_dispatch
+  workflow_dispatch:
   #schedule:
   #  - cron: '30 10,18 * * *'    
 
