@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2 # Checkout branch into the runner
       - name: Install OS dependencies
-        run: sudo apt-get install --no-install-recommends -y libcurl-dev
+        run: sudo apt-get install --no-install-recommends -y libcurl4-openssl-dev
       - uses: r-lib/actions/setup-r@master # Set up R runtime
         with:
           r-version: 'release'
