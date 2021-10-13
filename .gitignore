@@ -7,6 +7,7 @@ Code/Data/archive/
 # History files
 .Rhistory
 .Rapp.history
+.RProfile
 
 # Session Data files
 .RData
