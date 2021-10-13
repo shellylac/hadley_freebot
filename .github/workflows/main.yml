@@ -44,14 +44,14 @@ jobs:
 
       # Run R script
       - name: Create and post tweet
-        run: Rscript "Code/hadley_bot_script.R"
+        run: Rscript "hadley_bot_script.R"
 
   #Commit updated files to repo
       - name: Commit files # Commit changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add Code/Data/*
+          git add Data/*
           git commit -am "GA updates rows tweeted dataset"
           git push origin main
           
