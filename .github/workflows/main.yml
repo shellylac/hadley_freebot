@@ -18,29 +18,42 @@ jobs:
       TWITTER_ACCESS_TOKEN_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_HADLEYBOT }}
       TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@v1
-      - uses: r-lib/actions/setup-r-dependencies@v1
+      - uses: actions/checkout@v2 # Checkout branch into the runner
+      - uses: r-lib/actions/setup-r@master # Set up R runtime
         with:
-          cache-version: 4
-          extra-packages: |
-            here
-            readr
-            glue
-            rtweet
+          r-version: 'release'
+          
+      - name: Setup renv # Set up R env to install packages
+        run: |
+          install.packages('remotes')
+          remotes::install_github("rstudio/renv")
+        shell: Rscript {0}
+        
+      - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
+        with:
+          path: ~/.local/share/renv
+          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-renv-
+
+      - name: Install dependencies # Install the package dependencies
+        run: renv::restore()
+        shell: Rscript {0}
 
   #Run R script
       - name: Create and post tweet
-        run: Rscript Code/hadley_bot_script.R
+        run: source("Code/hadley_bot_script.R")
+        shell: Rscript {0}
 
   #Commit updated files to repo
-      - name: commit files
+      - name: Commit files # Commit changes
         run: |
-          git config --local user.name actions-user
           git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
           git add Code/Data/*
           git commit -am "GA updates rows tweeted dataset"
           git push origin main
-        env:
-          REPO_KEY: ${{ secrets.GITHUB_TOKEN }}
-          username: github-actions
+          
+          
+# git diff-index --quiet HEAD || (git commit -m "GA updates rows tweeted dataset" && git push)
+# If you use the above line - then it only commit if there are any changes and avoid the “Nothing to commit” message which the runner treats as an error
