@@ -44,19 +44,15 @@ jobs:
           install.packages("glue", dependencies = TRUE)
           install.packages("here", dependencies = TRUE)
 
-      # Run R script
-      - name: Create and post tweet
-        run: Rscript "hadley_bot_script.R"
+#       # Run R script
+#       - name: Create and post tweet
+#         run: Rscript "hadley_bot_script.R"
 
-  #Commit updated files to repo
-      - name: Commit files # Commit changes
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add Data/*
-          git commit -am "GA updates rows tweeted dataset"
-          git push origin main
-          
-          
-# git diff-index --quiet HEAD || (git commit -m "GA updates rows tweeted dataset" && git push)
-# If you use the above line - then it only commit if there are any changes and avoid the “Nothing to commit” message which the runner treats as an error
+#       #Commit updated files to repo
+#       - name: Commit files # Commit changes
+#         run: |
+#           git config --local user.email "actions@github.com"
+#           git config --local user.name "GitHub Actions"
+#           git add Data/*
+#           git commit -am "GA updates rows tweeted dataset"
+#           git push origin main
