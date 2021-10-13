@@ -6,23 +6,21 @@ name: tweet_scheduler
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   workflow_dispatch:
-  # schedule:
-    - cron: '30 10,19 * * *'    
+  #schedule:
+  #  - cron: '30 10,18 * * *'    
 
 jobs:
   hadleyfreebot-post:
     runs-on: ubuntu-latest
-    
     env:
       TWITTER_CONSUMER_API_KEY_HADLEYBOT: ${{ secrets.TWITTER_CONSUMER_API_KEY_HADLEYBOT }}
       TWITTER_CONSUMER_API_SECRET_HADLEYBOT: ${{ secrets.TWITTER_CONSUMER_API_SECRET_HADLEYBOT }}
       TWITTER_ACCESS_TOKEN_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_HADLEYBOT }}
       TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT }}
-    
+      RENV_PATHS_ROOT: ~/.local/share/renv
     defaults:
       run:
         working-directory: Code
-    
     steps:
       - uses: actions/checkout@v2 # Checkout branch into the runner
       - name: Install OS dependencies
@@ -32,9 +30,9 @@ jobs:
         with:
           r-version: 'release'
 
-      - uses: actions/cache@v2 # Set up cache so packages won't be compiled everytime job is run
+      - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
         with:
-           path:  ${{ env.R_LIBS_USER }}
+           path:  ${{ env.R_LIBS_USER }} #e.g. /home/runner/work/_temp/Library
            key: ${{ runner.os }}-scriptname-${{ hashFiles('Code/hadley_bot_script.R') }}
            restore-keys: ${{ runner.os }}-scriptname-
 
@@ -46,15 +44,15 @@ jobs:
           install.packages("glue", dependencies = TRUE)
           install.packages("here", dependencies = TRUE)
 
-      # Run R script (only call Rscript as we set working directory above)
-      - name: Create and post tweet
-        run: Rscript "hadley_bot_script.R"
+#       # Run R script
+#       - name: Create and post tweet
+#         run: Rscript "hadley_bot_script.R"
 
-      #Commit updated files to repo
-      - name: Commit files
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          git add Data/*
-          git commit -am "GA updates rows tweeted dataset"
-          git push origin main
+#       #Commit updated files to repo
+#       - name: Commit files # Commit changes
+#         run: |
+#           git config --local user.email "actions@github.com"
+#           git config --local user.name "GitHub Actions"
+#           git add Data/*
+#           git commit -am "GA updates rows tweeted dataset"
+#           git push origin main
