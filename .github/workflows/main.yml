@@ -23,12 +23,12 @@ jobs:
         working-directory: Code
     steps:
       - uses: actions/checkout@v2 # Checkout branch into the runner
-      
+
       - uses: r-lib/actions/setup-r@master # Set up R runtime
         with:
           r-version: 'release'
 
-     - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
+      - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
         with:
            path:  ${{ env.R_LIBS_USER }} #e.g. /home/runner/work/_temp/Library
            key: ${{ runner.os }}-scriptname-${{ hashFiles('Code/hadley_bot_script.R') }}
