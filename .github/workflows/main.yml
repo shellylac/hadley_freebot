@@ -5,9 +5,9 @@ name: tweet_scheduler
 # Controls when the workflow will run
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  workflow_dispatch:
-  #schedule:
-  #  - cron: '30 10,18 * * *'    
+  #workflow_dispatch:
+  schedule:
+  - cron: '0 10,18,20 * * *'    
 
 jobs:
   hadleyfreebot-post:
@@ -23,7 +23,7 @@ jobs:
         working-directory: Code
     steps:
       - uses: actions/checkout@v2 # Checkout branch into the runner
-      - name: Install OS dependencies
+      - name: Install OS dependencies # need to install libcurl for anuthing that depends on curl
         run: sudo apt-get install -y --no-install-recommends libcurl4-openssl-dev
 
       - uses: r-lib/actions/setup-r@master # Set up R runtime
@@ -32,7 +32,7 @@ jobs:
 
       - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
         with:
-           path:  ${{ env.R_LIBS_USER }} #e.g. /home/runner/work/_temp/Library
+           path:  ${{ env.R_LIBS_USER }}
            key: ${{ runner.os }}-scriptname-${{ hashFiles('Code/hadley_bot_script.R') }}
            restore-keys: ${{ runner.os }}-scriptname-
 
@@ -44,15 +44,15 @@ jobs:
           install.packages("glue", dependencies = TRUE)
           install.packages("here", dependencies = TRUE)
 
-#       # Run R script
-#       - name: Create and post tweet
-#         run: Rscript "hadley_bot_script.R"
+      # Run R script
+      - name: Create and post tweet
+        run: Rscript "hadley_bot_script.R"
 
-#       #Commit updated files to repo
-#       - name: Commit files # Commit changes
-#         run: |
-#           git config --local user.email "actions@github.com"
-#           git config --local user.name "GitHub Actions"
-#           git add Data/*
-#           git commit -am "GA updates rows tweeted dataset"
-#           git push origin main
+      #Commit updated files to repo
+      - name: Commit files
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add Data/*
+          git commit -am "GA updates rows tweeted dataset"
+          git push origin main
