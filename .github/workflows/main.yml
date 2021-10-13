@@ -17,30 +17,34 @@ jobs:
       TWITTER_CONSUMER_API_SECRET_HADLEYBOT: ${{ secrets.TWITTER_CONSUMER_API_SECRET_HADLEYBOT }}
       TWITTER_ACCESS_TOKEN_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_HADLEYBOT }}
       TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT }}
+      RENV_PATHS_ROOT: ~/.local/share/renv
+
     steps:
       - uses: actions/checkout@v2 # Checkout branch into the runner
       - uses: r-lib/actions/setup-r@master # Set up R runtime
         with:
           r-version: 'release'
           
-      - name: Setup renv # Set up R env to install packages
-        run: |
-          install.packages('remotes')
-          remotes::install_github("rstudio/renv")
-        shell: Rscript {0}
+      # - name: Setup renv # Set up R env to install packages
+      #   run: |
+      #     install.packages('remotes')
+      #     remotes::install_github("rstudio/renv")
+      #   shell: Rscript {0}
         
       - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
         with:
-          path: ~/.local/share/renv
+          path: ${{ env.RENV_PATHS_ROOT }}
           key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
           restore-keys: |
             ${{ runner.os }}-renv-
 
       - name: Install dependencies # Install the package dependencies
-        run: renv::restore()
         shell: Rscript {0}
-
-  #Run R script
+        run: |
+          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
+          renv::restore()
+  
+      # Run R script
       - name: Create and post tweet
         run: source("Code/hadley_bot_script.R")
         shell: Rscript {0}
