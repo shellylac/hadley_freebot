@@ -23,37 +23,25 @@ jobs:
         working-directory: Code
     steps:
       - uses: actions/checkout@v2 # Checkout branch into the runner
-      - name: Install OS dependencies
-        run: sudo apt-get install --no-install-recommends -y libcurl4-openssl-dev
+      
       - uses: r-lib/actions/setup-r@master # Set up R runtime
         with:
           r-version: 'release'
-          
-      # - name: Setup renv # Set up R env to install packages
-      #   run: |
-      #     install.packages('remotes')
-      #     remotes::install_github("rstudio/renv")
-      #   shell: Rscript {0}
-        
-      - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
+
+     - uses: actions/cache@v2 # Cache packages so won't be compiled everytime job is run
         with:
-          path: ${{ env.RENV_PATHS_ROOT }}
-          key: ${{ runner.os }}-renv-${{ hashFiles('**/renv.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-renv-
+           path:  ${{ env.R_LIBS_USER }} #e.g. /home/runner/work/_temp/Library
+           key: ${{ runner.os }}-scriptname-${{ hashFiles('Code/hadley_bot_script.R') }}
+           restore-keys: ${{ runner.os }}-scriptname-
 
-      - name: Install dependencies # Install the package dependencies
+      - name: Install packages
         shell: Rscript {0}
-        run: install.packages("renv")
+        run: |
+          install.packages("rtweet", dependencies = TRUE)
+          install.packages("readr", dependencies = TRUE)
+          install.packages("glue", dependencies = TRUE)
+          install.packages("here", dependencies = TRUE)
 
-      - name: run renv restore 
-        shell: Rscript {0}
-        run: renv::restore()
-
-      - name: run r libpaths 
-        shell: Rscript {0}
-        run: .libPaths()
-  
       # Run R script
       - name: Create and post tweet
         run: Rscript "Code/hadley_bot_script.R"
