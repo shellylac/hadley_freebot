@@ -18,7 +18,9 @@ jobs:
       TWITTER_ACCESS_TOKEN_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_HADLEYBOT }}
       TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET_HADLEYBOT }}
       RENV_PATHS_ROOT: ~/.local/share/renv
-
+    defaults:
+      run:
+        working-directory: Code
     steps:
       - uses: actions/checkout@v2 # Checkout branch into the runner
       - uses: r-lib/actions/setup-r@master # Set up R runtime
@@ -42,16 +44,13 @@ jobs:
         shell: Rscript {0}
         run: install.packages("renv")
 
-      - name: run renv load 
+      - name: run renv restore 
         shell: Rscript {0}
-        run: renv::load()
+        run: renv::restore()
 
       - name: run r libpaths 
         shell: Rscript {0}
         run: .libPaths()
-
-      - name: run renv restore 
-        run: R -e 'renv::restore()'
   
       # Run R script
       - name: Create and post tweet
