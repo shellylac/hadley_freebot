@@ -40,16 +40,22 @@ jobs:
 
       - name: Install dependencies # Install the package dependencies
         shell: Rscript {0}
-        run: |
-          if (!requireNamespace("renv", quietly = TRUE)) install.packages("renv")
-          renv::load()
-          .libPaths()
-          renv::restore()
+        run: install.packages("renv")
+
+      - name: run renv load 
+        shell: Rscript {0}
+        run: renv::load()
+
+      - name: run r libpaths 
+        shell: Rscript {0}
+        run: .libPaths()
+
+      - name: run renv restore 
+        run: R -e 'renv::restore()'
   
       # Run R script
       - name: Create and post tweet
-        run: source("Code/hadley_bot_script.R")
-        shell: Rscript {0}
+        run: Rscript "Code/hadley_bot_script.R"
 
   #Commit updated files to repo
       - name: Commit files # Commit changes
